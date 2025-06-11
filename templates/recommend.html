@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}교수님 추천 | 교수님 추천 서비스{% endblock %}
+{% block content %}
+<h2 style="margin-bottom:32px;">교수님 추천</h2>
+
+<div class="recommend-btn-group">
+    <form method="get" action="{% url 'recommend' %}">
+        <button type="submit" name="model" value="nari" class="nav-btn model-btn">나리</button>
+    </form>
+    <form method="get" action="{% url 'recommend' %}">
+        <button type="submit" name="model" value="yunseo" class="nav-btn model-btn">윤서</button>
+    </form>
+    <form method="get" action="{% url 'recommend' %}">
+        <button type="submit" name="model" value="jaehoon" class="nav-btn model-btn">재훈</button>
+    </form>
+    <form method="get" action="{% url 'recommend' %}">
+        <button type="submit" name="model" value="seohee" class="nav-btn model-btn">서희</button>
+    </form>
+</div>
+
+{% if professor %}
+    <div style="font-size:1.3rem; font-weight:600; color:#2563eb; text-align:center; margin-top:36px;">{{ professor }}</div>
+{% else %}
+    <div class="alert" style="text-align:center;">추천 결과가 없습니다.<br>모델을 선택해 주세요.</div>
+{% endif %}
+
+<style>
+.recommend-btn-group {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-bottom: 24px;
+    margin-top: 12px;
+}
+.model-btn {
+    min-width: 120px;
+    min-height: 48px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 18px;
+    padding: 12px 28px;
+    margin: 0;
+    box-sizing: border-box;
+    background: #2957ff;
+    color: #fff;
+    border: none;
+    transition: background 0.2s;
+    cursor: pointer;
+    text-align: center;
+}
+.model-btn:hover {
+    background: #1741c6;
+}
+</style>
+{% endblock %}

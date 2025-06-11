@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}프로필 | 교수님 추천 서비스{% endblock %}
+{% block content %}
+<h2>내 프로필</h2>
+<p class="prof-label">아이디: <b>{{ user.username }}</b></p>
+<form method="post">
+    {% csrf_token %}
+    <label for="preferred_professor" class="prof-label">선호 교수님</label>
+    <input type="text" name="preferred_professor" id="preferred_professor" value="{{ user.preferred_professor }}">
+    <button type="submit">저장</button>
+</form>
+<form method="post" action="{% url 'delete_account' %}" style="margin-top:16px;">
+    {% csrf_token %}
+    <button type="submit" style="background:#e53e3e;">회원 탈퇴</button>
+</form>
+{% endblock %}

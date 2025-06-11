@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}교수님 추천 | 교수님 추천 서비스{% endblock %}
+{% block content %}
+<h2>추천 교수님</h2>
+{% if professor %}
+    <div style="font-size:1.3rem; font-weight:600; color:#2563eb;">{{ professor }}</div>
+{% else %}
+    <div class="alert">아직 선호 교수님이 입력되지 않았습니다.</div>
+{% endif %}
+{% endblock %}

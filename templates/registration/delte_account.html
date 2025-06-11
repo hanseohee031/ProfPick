@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}회원탈퇴 | 교수님 추천 서비스{% endblock %}
+{% block content %}
+<h2>정말 탈퇴하시겠습니까?</h2>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" style="background:#e53e3e;">탈퇴</button>
+</form>
+<a href="{% url 'profile' %}">취소</a>
+{% endblock %}
