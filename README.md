@@ -34,13 +34,13 @@
 ## 기능 소개
 
 <p align="center">
-  <img src="image/1.png" width="400" alt="샘플 이미지 1">
-  <img src="image/2.png" width="400" alt="샘플 이미지 2">
-  <img src="image/3.png" width="400" alt="샘플 이미지 3">
-  <img src="image/4.png" width="400" alt="샘플 이미지 4">
-  <img src="image/5.png" width="400" alt="샘플 이미지 5">
-  <img src="image/6.png" width="400" alt="샘플 이미지 6">
-  <img src="image/7.png" width="400" alt="샘플 이미지 7">
+  <img src="image/1.png" width="500" alt="샘플 이미지 1">
+  <img src="image/2.png" width="500" alt="샘플 이미지 2">
+  <img src="image/3.png" width="500" alt="샘플 이미지 3">
+  <img src="image/4.png" width="500" alt="샘플 이미지 4">
+  <img src="image/5.png" width="500" alt="샘플 이미지 5">
+  <img src="image/6.png" width="500" alt="샘플 이미지 6">
+  <img src="image/7.png" width="500" alt="샘플 이미지 7">
 </p>
 
 ---
