@@ -33,8 +33,15 @@
 
 ## 기능 소개
 
-- **교수님 추천**  
-  각 팀원이 개발한 모델을 선택하여 교수님 추천 결과를 확인할 수 있습니다.
+<p align="center">
+  <img src="image/1.png" width="400" alt="샘플 이미지 1">
+  <img src="image/2.png" width="400" alt="샘플 이미지 2">
+  <img src="image/3.png" width="400" alt="샘플 이미지 3">
+  <img src="image/4.png" width="400" alt="샘플 이미지 4">
+  <img src="image/5.png" width="400" alt="샘플 이미지 5">
+  <img src="image/6.png" width="400" alt="샘플 이미지 6">
+  <img src="image/7.png" width="400" alt="샘플 이미지 7">
+</p>
 
 ---
 
