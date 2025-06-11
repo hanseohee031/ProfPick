@@ -1,76 +1,183 @@
-<!-- templates/base.html -->
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}교수님 추천 서비스{% endblock %}</title>
-<style>
-    body { background: #f9fafb; font-family: 'Pretendard', 'Malgun Gothic', Arial, sans-serif; color: #222; margin: 0; }
-    .navbar { background: #fff; box-shadow: 0 1px 4px #ddd; padding: 18px 0; text-align: center; margin-bottom: 48px; }
-    .nav-btn,
-    .navbar button.nav-btn {
-        display: inline-block;
-        background: #2957ff;
-        color: #fff;
-        border: none;
-        border-radius: 18px;
-        padding: 12px 28px;
-        margin: 0 8px;
-        font-size: 1rem;
-        font-weight: 600;
-        cursor: pointer;
-        text-decoration: none;
-        transition: background 0.2s;
-        min-width: 120px;
-        min-height: 48px;
-        line-height: 24px;
-        box-sizing: border-box;
-        vertical-align: middle;
-    }
-    .nav-btn:hover { background: #1741c6; }
-    .nav-btn.logout,
-    .navbar button.nav-btn.logout {
-        background: #d10024;
-    }
-    .nav-btn.logout:hover,
-    .navbar button.nav-btn.logout:hover {
-        background: #a6001a;
-    }
-    .container { max-width: 500px; margin: 40px auto; background: #fff; border-radius: 24px; box-shadow: 0 2px 16px #e7e7e7; padding: 36px; }
-    h2, h1 { font-weight: 800; margin-bottom: 32px; }
-    form label { display: block; margin: 16px 0 6px 0; font-weight: 600; }
-    input[type="text"], input[type="password"] { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #cbd5e1; margin-bottom: 18px; }
-    button[type="submit"]:not(.nav-btn) { background: #2563eb; color: #fff; border: none; border-radius: 12px; padding: 12px 0; width: 100%; font-size: 1.1rem; font-weight: 700; cursor: pointer; margin-top: 10px;}
-    button[type="submit"]:not(.nav-btn):hover { background: #1741c6; }
-    .alert { background: #ffeff0; color: #b91c1c; padding: 12px; border-radius: 8px; margin-bottom: 24px; text-align: center;}
-    .prof-label { font-weight: 600; font-size: 1.1rem;}
-    .nav-form { display: inline-block; margin: 0; padding: 0; vertical-align: middle; }
-</style>
-
-
-
-
+    <title>{% block title %}ProfPick | 교수님 추천 서비스{% endblock %}</title>
+    <style>
+        html, body {
+            height: 100%;
+            min-height: 100%;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background: #f9fafb;
+            font-family: 'Pretendard', 'Malgun Gothic', Arial, sans-serif;
+            color: #222;
+            margin: 0;
+        }
+        .brand-header {
+            background: none;
+            text-align: center;
+            margin-top: 24px;
+            margin-bottom: -10px;
+        }
+        .brand-title {
+            font-family: 'Montserrat', 'Pretendard', Arial, sans-serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #2563eb;
+            letter-spacing: 1.5px;
+            text-shadow: 0 2px 8px #dde8ff;
+            text-decoration: none;
+            transition: color 0.18s;
+        }
+        .brand-title:hover {
+            color: #1741c6;
+            text-decoration: underline;
+        }
+        .navbar {
+            background: #fff;
+            box-shadow: 0 1px 4px #ddd;
+            padding: 18px 0;
+            text-align: center;
+            margin-bottom: 48px;
+        }
+        .nav-btn,
+        .navbar button.nav-btn {
+            display: inline-block;
+            background: #2957ff;
+            color: #fff;
+            border: none;
+            border-radius: 18px;
+            padding: 12px 28px;
+            margin: 0 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.2s;
+            min-width: 120px;
+            min-height: 48px;
+            line-height: 24px;
+            box-sizing: border-box;
+            vertical-align: middle;
+        }
+        .nav-btn:hover { background: #1741c6; }
+        .nav-btn.logout,
+        .navbar button.nav-btn.logout {
+            background: #d10024;
+        }
+        .nav-btn.logout:hover,
+        .navbar button.nav-btn.logout:hover {
+            background: #a6001a;
+        }
+        .container {
+            max-width: 600px;
+            margin: 40px auto 0 auto;
+            background: #fff;
+            border-radius: 24px;
+            box-shadow: 0 2px 16px #e7e7e7;
+            padding: 48px 38px;
+            text-align: center;
+            flex: 1 0 auto; /* footer 하단 고정용 */
+        }
+        h2, h1 { font-weight: 800; margin-bottom: 32px; }
+        form label { display: block; margin: 16px 0 6px 0; font-weight: 600; }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #cbd5e1;
+            margin-bottom: 18px;
+        }
+        button[type="submit"]:not(.nav-btn) {
+            background: #2563eb;
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 0;
+            width: 100%;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button[type="submit"]:not(.nav-btn):hover { background: #1741c6; }
+        .alert {
+            background: #ffeff0;
+            color: #b91c1c;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        .prof-label { font-weight: 600; font-size: 1.1rem;}
+        .nav-form { display: inline-block; margin: 0; padding: 0; vertical-align: middle; }
+        footer {
+            flex-shrink: 0;
+            width: 100%;
+            background: #16181d;
+            color: #f5f6fa;
+            margin-top: 60px;
+            padding: 36px 0 22px 0;
+            font-size: 1.07rem;
+            border-top: 0;
+            text-align: center;
+            letter-spacing: 0.2px;
+            position: relative;
+            bottom: 0;
+            left: 0;
+        }
+        .footer-title {
+            font-size: 1.18rem;
+            font-weight: 700;
+            color: #51a7ff;
+            margin-bottom: 10px;
+            margin-top: 0;
+        }
+        .footer-desc {
+            margin-bottom: 8px;
+            color: #cfd8e2;
+        }
+        .footer-team {
+            margin-top: 10px;
+            color: #fff;
+        }
+        .footer-servicename {
+            font-size: 0.98rem;
+            color: #b3b3b3;
+            margin-top: 8px;
+        }
+    </style>
     {% block head %}{% endblock %}
 </head>
 <body>
-
-<div class="navbar">
-    {% if user.is_authenticated %}
-        <form method="post" action="{% url 'logout' %}" class="nav-form">
-            {% csrf_token %}
-            <button type="submit" class="nav-btn logout">로그아웃</button>
-        </form>
-        <a href="{% url 'profile' %}" class="nav-btn">프로필</a>
-        <a href="{% url 'recommend' %}" class="nav-btn">교수님 추천</a>
-    {% else %}
-        <a href="{% url 'signup' %}" class="nav-btn">회원가입</a>
-        <a href="{% url 'login' %}" class="nav-btn">로그인</a>
-    {% endif %}
-</div>
-
-
+    <div class="brand-header">
+        <a href="{% url 'home' %}" class="brand-title">ProfPick</a>
+    </div>
+    <div class="navbar">
+        {% if user.is_authenticated %}
+            <form method="post" action="{% url 'logout' %}" class="nav-form">
+                {% csrf_token %}
+                <button type="submit" class="nav-btn logout">로그아웃</button>
+            </form>
+            <a href="{% url 'profile' %}" class="nav-btn">프로필</a>
+            <a href="{% url 'recommend' %}" class="nav-btn">교수님 추천</a>
+        {% else %}
+            <a href="{% url 'signup' %}" class="nav-btn">회원가입</a>
+            <a href="{% url 'login' %}" class="nav-btn">로그인</a>
+        {% endif %}
+    </div>
     <div class="container">
         {% block content %}{% endblock %}
     </div>
+    <footer>
+        <div class="footer-title">자연어처리를 활용한 강의 평가 데이터 분석 교수님 추천 시스템</div>
+        <div class="footer-desc">2025-1 데이터마이닝 프로젝트 | 김유섭 교수님</div>
+        <div class="footer-team">팀원: 임나리 · 장재훈 · 최윤서 · 한서희</div>
+        <div class="footer-servicename">서비스명: <b>ProfPick</b></div>
+    </footer>
 </body>
 </html>
