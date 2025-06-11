@@ -1,16 +1,44 @@
 {% extends "base.html" %}
-{% block title %}프로필 | 교수님 추천 서비스{% endblock %}
+{% block title %}내 프로필 | ProfPick{% endblock %}
 {% block content %}
-<h2>내 프로필</h2>
-<p class="prof-label">아이디: <b>{{ user.username }}</b></p>
-<form method="post" style="margin-top: 20px;">
-    {% csrf_token %}
-    <label for="preferred_professor" class="prof-label">선호 교수님</label>
-    <input type="text" name="preferred_professor" id="preferred_professor" value="{{ user.preferred_professor }}">
-    <button type="submit">저장</button>
-</form>
-<form method="post" action="{% url 'delete_account' %}" style="margin-top:24px;">
-    {% csrf_token %}
-    <button type="submit" style="background:#e53e3e;">회원 탈퇴</button>
-</form>
+<div style="max-width:370px; margin:0 auto;">
+    <h2 style="margin-bottom:26px;">내 프로필</h2>
+    <form method="post" autocomplete="off">
+        {% csrf_token %}
+        <div style="text-align:left; margin-bottom:14px;">
+            <label style="font-weight:700;">아이디</label>
+            <input type="text" name="username" value="{{ user.username }}" readonly style="background:#f4f5fa;">
+        </div>
+        <div style="text-align:left; margin-bottom:14px;">
+            <label style="font-weight:700;">이름</label>
+            <input type="text" name="name" value="{{ user.name }}">
+        </div>
+        <div style="text-align:left; margin-bottom:14px;">
+            <label style="font-weight:700;">학번</label>
+            <input type="text" name="student_id" value="{{ user.student_id }}">
+        </div>
+        <div style="text-align:left; margin-bottom:14px;">
+            <label style="font-weight:700;">학년</label>
+            <select name="grade" style="width:100%; padding:10px; border-radius:8px; border:1px solid #ccc;">
+                <option value="1" {% if user.grade == '1' %}selected{% endif %}>1학년</option>
+                <option value="2" {% if user.grade == '2' %}selected{% endif %}>2학년</option>
+                <option value="3" {% if user.grade == '3' %}selected{% endif %}>3학년</option>
+                <option value="4" {% if user.grade == '4' %}selected{% endif %}>4학년</option>
+            </select>
+        </div>
+        <div style="text-align:left; margin-bottom:24px;">
+            <label style="font-weight:700;">성별</label>
+            <select name="gender" style="width:100%; padding:10px; border-radius:8px; border:1px solid #ccc;">
+                <option value="남" {% if user.gender == '남' %}selected{% endif %}>남</option>
+                <option value="여" {% if user.gender == '여' %}selected{% endif %}>여</option>
+                <option value="기타" {% if user.gender == '기타' %}selected{% endif %}>기타</option>
+            </select>
+        </div>
+        <button type="submit" class="nav-btn" style="width:100%;">저장</button>
+    </form>
+    <form method="post" action="{% url 'delete_account' %}" style="margin-top:18px;">
+        {% csrf_token %}
+        <button type="submit" class="nav-btn logout" style="width:100%;">회원 탈퇴</button>
+    </form>
+</div>
 {% endblock %}

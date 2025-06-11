@@ -1,9 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from .forms import CustomUserCreationForm
-
-
 from django.contrib.auth.decorators import login_required
+
 
 @login_required
 def delete_account(request):
@@ -14,11 +13,16 @@ def delete_account(request):
 
 @login_required
 def profile(request):
+    user = request.user
     if request.method == "POST":
-        preferred = request.POST.get('preferred_professor')
-        request.user.preferred_professor = preferred
-        request.user.save()
-    return render(request, 'profile.html', {'user': request.user})
+        # 필드별로 입력값 반영
+        user.name = request.POST.get('name', user.name)
+        user.student_id = request.POST.get('student_id', user.student_id)
+        user.grade = request.POST.get('grade', user.grade)
+        user.gender = request.POST.get('gender', user.gender)
+        user.save()
+        return redirect('profile')
+    return render(request, 'profile.html', {'user': user})
 
 def signup(request):
     if request.method == 'POST':
