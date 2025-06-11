@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'core',
     'recommend',
     'users',
-
+    "widget_tweaks",
 
 ]
 
