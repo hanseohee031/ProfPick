@@ -1,77 +1,99 @@
+# recommend/views.py
+
 import os
 import pandas as pd
+
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 
+# 1) 모델별 기본 가중치 (GET 시 드래그 순서가 없을 때 사용)
+default_weights = {
+    'yunseo':  {'소통_잘됨':5, '참여_유도':4, '학점_잘줌':3, '친근함':2, '강의_잘함':1},
+    'nari':    {'강의_잘함':5, '소통_잘됨':4, '친근함':3, '참여_유도':2, '학점_잘줌':1},
+    'jaehoon': {'참여_유도':5, '학점_잘줌':4, '강의_잘함':3, '소통_잘됨':2, '친근함':1},
+    'seohee':  {'학점_잘줌':5, '강의_잘함':4, '소통_잘됨':3, '참여_유도':2, '친근함':1},
+}
+
+# 2) 카테고리 키 → 화면 라벨 매핑
+category_labels = {
+    '소통_잘됨': '소통 잘됨',
+    '참여_유도': '참여 유도',
+    '학점_잘줌': '학점 잘줌',
+    '친근함':   '친근함',
+    '강의_잘함': '강의 잘함',
+}
+
 @login_required
 def recommend(request):
-    # GET/POST 양쪽에서 model 파라미터 받아오기
-    model = request.GET.get('model') or request.POST.get('model')
+    """
+    - GET  /recommend/                -> 모델 선택 페이지
+    - GET  /recommend/?model=<name>   -> 해당 모델 드래그 우선순위 페이지
+    - POST /recommend/?model=<name>   -> 해당 모델 추천 결과 페이지
+    """
 
-    # 1) 공통: 카테고리 키 목록과 라벨 매핑
-    aspects = ['강의_잘함', '소통_잘됨', '참여_유도', '친근함', '학점_잘줌']
-    label_map = {
-        '강의_잘함': '강의 잘함',
-        '소통_잘됨': '소통 잘됨',
-        '참여_유도': '참여 유도',
-        '친근함':   '친근함',
-        '학점_잘줌': '학점 잘줌',
-    }
+    # 1) 모델 파라미터가 없는 GET 요청이면 모델 선택 페이지 렌더
+    if request.method == 'GET' and 'model' not in request.GET:
+        return render(request, 'recommend.html')
 
-    # 2) GET → 초기화면: 드래그&드롭 리스트
-    if request.method == 'GET' and model:
-        # (선택) 모델별 기본초기순서 정의
-        default_weights = {
-            'yunseo':  {'소통_잘됨':5, '참여_유도':4, '친근함':3, '학점_잘줌':2, '강의_잘함':1},
-            'jaehoon': {'강의_잘함':5, '소통_잘됨':4, '참여_유도':3, '친근함':2, '학점_잘줌':1},
-            'nari':    {'친근함':5, '강의_잘함':4, '소통_잘됨':3, '참여_유도':2, '학점_잘줌':1},
-            'seohee':  {'학점_잘줌':5, '강의_잘함':4, '소통_잘됨':3, '참여_유도':2, '친근함':1},
-        }
-        wm = default_weights.get(model, {})
-        sorted_aspects = sorted(aspects, key=lambda k: wm.get(k, 0), reverse=True)
-        categories = [{'key': k, 'label': label_map[k]} for k in sorted_aspects]
+    # 2) model 파라미터가 있는 GET/POST 요청 처리
+    model = request.GET.get('model')  # 'yunseo', 'nari', 'jaehoon', 'seohee'
 
-        return render(request, 'recommend/yunseo_result.html', {
-            'categories': categories,
-            'show_result': False,
-            'model': model,
-        })
+    # 3) 드래그 리스트에 사용할 카테고리 구성
+    cats = default_weights.get(model, default_weights['yunseo'])
+    categories = [
+        {'key': key, 'label': category_labels[key]}
+        for key in cats.keys()
+    ]
 
-    # 3) POST → 사용자 드래그 순서 반영해서 가중치 계산 및 추천
-    if request.method == 'POST' and model:
-        # 3.1) 넘어온 순서 읽기
-        order_str = request.POST.get('aspect_order', '')
-        order_list = [x for x in order_str.split(',') if x in aspects]
-        if not order_list:
-            order_list = aspects[:]
+    show_result = False
+    recommendations = []
 
-        # 3.2) 순서별 사용자 가중치 설정 (1순위:10, 2순위:5, 3순위:3, 4순위:1, 5순위:0)
-        weight_values = [10, 5, 3, 1, 0]
-        user_weights = {
-            aspect: weight_values[idx] if idx < len(weight_values) else 0
-            for idx, aspect in enumerate(order_list)
-        }
+    if request.method == 'POST':
+        # 4.1) 사용자가 정렬한 우선순위 파싱
+        order = request.POST.get('aspect_order', '')
+        if order:
+            aspects = order.split(',')
+        else:
+            aspects = list(default_weights[model].keys())
 
-        # 3.3) 원본 점수 데이터 로드
+        # 4.2) 모델별 CSV 파일 선택
         BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        csv_path = os.path.join(BASE_DIR, 'data', 'professor_scores.csv')
-        df = pd.read_csv(csv_path)  # 컬럼: ['professor'] + aspects
+        csv_map = {
+            'seohee':  'professor_scores_seohee.csv',
+            'yunseo':  'professor_scores.csv',
+            'nari':    'professor_scores.csv',
+            'jaehoon': 'professor_scores.csv',
+        }
+        csv_file = csv_map.get(model, 'professor_scores.csv')
+        csv_path = os.path.join(BASE_DIR, 'data', csv_file)
 
-        # 3.4) 컬럼별 가중치 곱하고 총점 계산
-        weighted = df.copy()
-        for asp, w in user_weights.items():
-            weighted[asp] = weighted[asp] * w
-        weighted['total_score'] = weighted[list(user_weights.keys())].sum(axis=1)
+        # 4.3) 점수 데이터 로드 및 컬럼명 정규화
+        df = pd.read_csv(csv_path)
+        # CSV 컬럼명이 '소통 잘됨' 등 공백 형태라면, 내부 로직의 언더스코어 키로 변경
+        df.rename(columns=lambda c: c.replace(' ', '_'), inplace=True)
 
-        # 3.5) 내림차순 정렬 후 교수님 순위 및 점수 리스트
-        df_sorted = weighted.sort_values('total_score', ascending=False)
-        recommendations = list(zip(df_sorted['professor'], df_sorted['total_score']))
+        # 4.4) 각 카테고리에 대한 가중치 계산 (첫 요소에 최고값)
+        weights = {a: (len(aspects) - i) for i, a in enumerate(aspects)}
 
-        return render(request, 'recommend/yunseo_result.html', {
-            'recommendations': recommendations,
-            'show_result': True,
-            'model': model,
-        })
+        # 4.5) total_score 계산
+        df['total_score'] = (
+            df[aspects]
+              .mul([weights[a] for a in aspects], axis=1)
+              .sum(axis=1)
+        )
 
-    # 4) model 파라미터가 없거나 다른 경우
-    return render(request, 'recommend.html', {})
+        # 4.6) 내림차순 정렬 후 추천 리스트 생성
+        df_sorted = df.sort_values('total_score', ascending=False)
+        recommendations = list(zip(
+            df_sorted['professor'],
+            df_sorted['total_score']
+        ))
+        show_result = True
+
+    # 5) 드래그 화면(GET) 또는 결과 화면(POST) 렌더링
+    return render(request, 'recommend/yunseo_result.html', {
+        'model': model,
+        'categories': categories,
+        'show_result': show_result,
+        'recommendations': recommendations,
+    })
