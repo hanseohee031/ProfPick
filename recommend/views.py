@@ -41,11 +41,21 @@ def recommend(request):
     # ────────────── “nari” 전용 GET 처리 ──────────────
     if request.method == 'GET' and model == 'nari':
         BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        csv_path = os.path.join(BASE_DIR, 'data', 'professor_scores.csv')
+        csv_path = os.path.join(BASE_DIR, 'data', 'professor_recommendations.csv')
         df = pd.read_csv(csv_path)
-        profs = df['professor'].tolist()
+
+        # 컬럼명 공백 → 언더스코어로 변경
+        df.rename(columns=lambda c: c.replace(' ', '_'), inplace=True)
+
+        # 지정한 순서대로 정렬
+        desired_order = ['김은주', '양은샘', '신미영', '김유섭', '김선정', '이정근']
+        df = df.set_index('교수_이름').loc[desired_order].reset_index()
+
+        # 전체 컬럼을 리스트 of dict 형태로 변환
+        records = df.to_dict(orient='records')
+
         return render(request, 'recommend/nari_list.html', {
-            'profs': profs
+            'records': records
         })
     # ──────────────────────────────────────────────────
 
@@ -59,6 +69,7 @@ def recommend(request):
     show_result = False
     recommendations = []
 
+    # 4) POST 요청일 때만 추천 결과 계산
     if request.method == 'POST':
         # 4.1) 사용자가 정렬한 우선순위 파싱
         order = request.POST.get('aspect_order', '')
@@ -82,7 +93,7 @@ def recommend(request):
         df = pd.read_csv(csv_path)
         df.rename(columns=lambda c: c.replace(' ', '_'), inplace=True)
 
-        # 4.4) 각 카테고리에 대한 가중치 계산 (첫 요소에 최고값)
+        # 4.4) 각 카테고리에 대한 가중치 계산
         weights = {a: (len(aspects) - i) for i, a in enumerate(aspects)}
 
         # 4.5) total_score 계산

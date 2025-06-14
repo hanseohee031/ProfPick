@@ -1,15 +1,51 @@
+{# templates/recommend/nari_list.html #}
 {% extends "base.html" %}
+
 {% block title %}Nari PICK - 교수님 순위{% endblock %}
+
 {% block content %}
-  <div style="max-width: 600px; margin: 40px auto; text-align: center;">
-    <h2>Nari PICK - 교수님 순위</h2>
-    <ol style="margin-top: 24px; font-size:1.1rem; text-align:left;">
-      {% for prof in profs %}
-        <li style="padding:8px 0;">{{ prof }} 교수님</li>
+<div style="max-width:800px; margin:40px auto;">
+  <h2 style="text-align:center; margin-bottom:24px;">
+    Nari PICK - 교수님 순위
+  </h2>
+  <table style="width:100%; border-collapse: collapse; font-size:1rem;">
+    <thead>
+      <tr style="background:#f0f4ff;">
+        <th style="padding:8px; border:1px solid #ddd;">순위</th>
+        <th style="padding:8px; border:1px solid #ddd;">교수 이름</th>
+        <th style="padding:8px; border:1px solid #ddd;">긍정 키워드 수</th>
+        <th style="padding:8px; border:1px solid #ddd;">총 리뷰 단어 수</th>
+        <th style="padding:8px; border:1px solid #ddd;">인기 점수</th>
+        <th style="padding:8px; border:1px solid #ddd;">대표 키워드</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for rec in records %}
+      <tr {% if forloop.counter0|divisibleby:2 %}style="background:#fafafa;"{% endif %}>
+        <td style="padding:8px; border:1px solid #ddd; text-align:center;">
+          {{ forloop.counter }}
+        </td>
+        <td style="padding:8px; border:1px solid #ddd;">
+          {{ rec.교수_이름 }}
+        </td>
+        <td style="padding:8px; border:1px solid #ddd; text-align:right;">
+          {{ rec.긍정_키워드_수 }}
+        </td>
+        <td style="padding:8px; border:1px solid #ddd; text-align:right;">
+          {{ rec.총_리뷰_단어_수 }}
+        </td>
+        <td style="padding:8px; border:1px solid #ddd; text-align:right;">
+          {{ rec.인기_점수 }}
+        </td>
+        <td style="padding:8px; border:1px solid #ddd;">
+          {{ rec.대표_키워드 }}
+        </td>
+      </tr>
       {% endfor %}
-    </ol>
-    <p style="margin-top:32px;">
-      <a href="{% url 'recommend' %}" style="color:#2957ff;">← 돌아가기</a>
-    </p>
-  </div>
+    </tbody>
+  </table>
+  <p style="text-align:center; margin-top:32px;">
+    <a href="{% url 'recommend' %}" style="color:#2957ff;">← 돌아가기</a>
+  </p>
+</div>
 {% endblock %}
