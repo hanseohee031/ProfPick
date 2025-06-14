@@ -53,7 +53,27 @@
 <p align="center">
   <img src="image/7.png" width="600"><br>
 </p>
-
+<p align="center">
+  <img src="image/result1.png" width="600"><br>
+</p>
+<p align="center">
+  <img src="image/yunseo.png" width="600"><br>
+</p>
+<p align="center">
+  <img src="image/yunseo2.png" width="600"><br>
+</p>
+<p align="center">
+  <img src="image/seohee.png" width="600"><br>
+</p>
+<p align="center">
+  <img src="image/seohee2.png" width="600"><br>
+</p>
+<p align="center">
+  <img src="image/category.png" width="600"><br>
+</p>
+<p align="center">
+  <img src="nari.png" width="600"><br>
+</p>
 ---
 
 ## 기술 스택
