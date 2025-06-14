@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}윤서 PICK 결과{% endblock %}
+{% block content %}
+<div style="max-width:600px; margin:32px auto;">
+    <h2 style="margin-bottom:24px;">윤서 PICK - 교수님 맞춤 추천</h2>
+    {% if not show_result %}
+        <form method="post">
+            {% csrf_token %}
+            <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:24px;">
+                <label>강의 잘함 가중치 <input type="number" name="lecture" min="1" max="10" value="5"></label>
+                <label>소통 잘됨 가중치 <input type="number" name="communication" min="1" max="10" value="5"></label>
+                <label>참여 유도 가중치 <input type="number" name="participation" min="1" max="10" value="5"></label>
+                <label>친근함 가중치 <input type="number" name="friendly" min="1" max="10" value="5"></label>
+                <label>학점 잘줌 가중치 <input type="number" name="easygrade" min="1" max="10" value="5"></label>
+            </div>
+            <button type="submit" style="padding:12px 24px; background:#2563eb; color:#fff; border:none; border-radius:8px; font-size:1.1em;">맞춤 추천 받기</button>
+        </form>
+        <div style="text-align:center; margin-top:32px;">
+            <a href="{% url 'recommend' %}" style="color:#2563eb; text-decoration:underline;">← 돌아가기</a>
+        </div>
+    {% else %}
+        <h3>추천 교수님 순위</h3>
+        <table style="width:100%; border-collapse:collapse; margin-bottom:24px;">
+            <tr style="background:#f0f4ff;">
+                <th>순위</th>
+                <th>교수명</th>
+                <th>총점</th>
+                <th>강의잘함</th>
+                <th>소통잘됨</th>
+                <th>참여유도</th>
+                <th>친근함</th>
+                <th>학점잘줌</th>
+            </tr>
+            {% for prof in professors %}
+            <tr style="text-align:center;">
+                <td>{{ forloop.counter }}</td>
+                <td>{{ prof.교수명|default:prof.professor }}</td>
+                <td>{{ prof.total_score }}</td>
+                <td>{{ prof.강의잘함 }}</td>
+                <td>{{ prof.소통잘됨 }}</td>
+                <td>{{ prof.참여유도 }}</td>
+                <td>{{ prof.친근함 }}</td>
+                <td>{{ prof.학점잘줌 }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        <div style="text-align:center; margin-top:32px;">
+            <a href="{% url 'recommend' %}?model=yunseo" style="color:#2563eb; text-decoration:underline;">← 다시 선택하기</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
