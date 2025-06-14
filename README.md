@@ -48,12 +48,6 @@
   <img src="image/5.png" width="600"><br>
 </p>
 <p align="center">
-  <img src="image/6.png" width="600"><br>
-</p>
-<p align="center">
-  <img src="image/7.png" width="600"><br>
-</p>
-<p align="center">
   <img src="image/result1.png" width="600"><br>
 </p>
 <p align="center">
@@ -72,7 +66,7 @@
   <img src="image/category.png" width="600"><br>
 </p>
 <p align="center">
-  <img src="nari.png" width="600"><br>
+  <img src="image/nari.png" width="600"><br>
 </p>
 ---
 
