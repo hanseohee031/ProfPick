@@ -38,6 +38,17 @@ def recommend(request):
     # 2) model 파라미터가 있는 GET/POST 요청 처리
     model = request.GET.get('model')  # 'yunseo', 'nari', 'jaehoon', 'seohee'
 
+    # ────────────── “nari” 전용 GET 처리 ──────────────
+    if request.method == 'GET' and model == 'nari':
+        BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        csv_path = os.path.join(BASE_DIR, 'data', 'professor_scores.csv')
+        df = pd.read_csv(csv_path)
+        profs = df['professor'].tolist()
+        return render(request, 'recommend/nari_list.html', {
+            'profs': profs
+        })
+    # ──────────────────────────────────────────────────
+
     # 3) 드래그 리스트에 사용할 카테고리 구성
     cats = default_weights.get(model, default_weights['yunseo'])
     categories = [
@@ -69,7 +80,6 @@ def recommend(request):
 
         # 4.3) 점수 데이터 로드 및 컬럼명 정규화
         df = pd.read_csv(csv_path)
-        # CSV 컬럼명이 '소통 잘됨' 등 공백 형태라면, 내부 로직의 언더스코어 키로 변경
         df.rename(columns=lambda c: c.replace(' ', '_'), inplace=True)
 
         # 4.4) 각 카테고리에 대한 가중치 계산 (첫 요소에 최고값)

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Nari PICK - 교수님 순위{% endblock %}
+{% block content %}
+  <div style="max-width: 600px; margin: 40px auto; text-align: center;">
+    <h2>Nari PICK - 교수님 순위</h2>
+    <ol style="margin-top: 24px; font-size:1.1rem; text-align:left;">
+      {% for prof in profs %}
+        <li style="padding:8px 0;">{{ prof }} 교수님</li>
+      {% endfor %}
+    </ol>
+    <p style="margin-top:32px;">
+      <a href="{% url 'recommend' %}" style="color:#2957ff;">← 돌아가기</a>
+    </p>
+  </div>
+{% endblock %}
