@@ -41,13 +41,12 @@
 ---
 ## 목차
 - [환경 정보](#환경-정보)
+- [발표 자료](#발표-자료)
 - [기능 소개](#기능-소개)
 - [기술 스택](#기술-스택)
 - [설치 및 실행 방법](#설치-및-실행-방법)
 - [서버 실행](#서버-실행)
 - [접속 방법](#접속-방법)
-- [역할 분담](#역할-분담)
-- [발표 자료](#발표-자료)
 
 ---
 
@@ -57,23 +56,16 @@
 > Windows, MacOS에서도 실행 가능하지만, 일부 명령어는 다를 수 있으니 참고해 주세요.
 
 ---
+## 발표 자료
+
+
+
+---
 
 ## 기능 소개
-<p align="center">
-  <img src="image/1.png" width="600"><br>
-</p>
-<p align="center">
-  <img src="image/2.png" width="600"><br>
-</p>
-<p align="center">
-  <img src="image/3.png" width="600"><br>
-</p>
-<p align="center">
-  <img src="image/4.png" width="600"><br>
-</p>
-<p align="center">
-  <img src="image/5.png" width="600"><br>
-</p>
+
+### 교수님 추천 결과
+
 <p align="center">
   <img src="image/result1.png" width="600"><br>
 </p>
@@ -94,6 +86,24 @@
 </p>
 <p align="center">
   <img src="image/nari.png" width="600"><br>
+</p>
+
+---
+### 기본 기능 구현
+<p align="center">
+  <img src="image/1.png" width="600"><br>
+</p>
+<p align="center">
+  <img src="image/2.png" width="600"><br>
+</p>
+<p align="center">
+  <img src="image/3.png" width="600"><br>
+</p>
+<p align="center">
+  <img src="image/4.png" width="600"><br>
+</p>
+<p align="center">
+  <img src="image/5.png" width="600"><br>
 </p>
 
 ---
@@ -153,7 +163,3 @@ daphne config.asgi:application
 echo "http://127.0.0.1:8000"
 ````
 ---
-## 역할 분담
-
----
-## 발표 자료
