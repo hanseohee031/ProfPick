@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}{{ model|capfirst }} PICK 결과{% endblock %}
+{% block content %}
+<div style="max-width:600px; margin:32px auto;">
+    <h2 style="margin-bottom:24px;">
+        {{ model|capfirst }} PICK - 교수님 맞춤 추천
+    </h2>
+
+    {% if not show_result %}
+    <form method="post" action="{% url 'recommend' %}?model=jaehoon">
+        {% csrf_token %}
+        <label for="user_text" style="display:block; margin-bottom:8px;">
+            수강 후기를 자유롭게 입력해주세요:
+        </label>
+        <textarea name="user_text" rows="6"
+            style="width:100%; padding:12px; border-radius:8px; border:1px solid #ccc; font-size:1.1em;"
+            required></textarea>
+        <button type="submit" style="padding:12px 24px; background:#2563eb; color:#fff;
+                       border:none; border-radius:8px; font-size:1.1em;">
+            추천 받기
+        </button>
+    </form>
+
+    <div style="text-align:center; margin-top:32px;">
+        <a href="{% url 'recommend' %}"
+        style="color:#2563eb; text-decoration:underline;">← 돌아가기</a>
+    </div>
+
+    {% else %}
+    <!-- 추천 결과 화면 -->
+    <h3>추천 교수님 순위</h3>
+    <ul style="font-size:1.2em; margin:32px 0;">
+        {% for prof, score in recommendations %}
+        <li>
+            추천 {{ forloop.counter }}순위: {{ prof }} 교수님
+            <strong>(확률: {{ score|floatformat:2 }})</strong>
+        </li>
+        {% endfor %}
+    </ul>
+    <div style="text-align:center; margin-top:32px;">
+        <a href="{% url 'recommend' %}?model={{ model }}"
+        style="color:#2563eb; text-decoration:underline;">← 다시 선택하기</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
