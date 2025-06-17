@@ -141,8 +141,8 @@ source professorpick-env/bin/activate
 # pip 최신 버전으로 업그레이드
 pip install --upgrade pip
 
-# Django 5.2.1 설치
-pip install Django==5.2.1
+# 필수 패키지 설치
+pip install -r requirements.txt
 
 # Django 버전 확인
 django-admin --version
@@ -150,6 +150,10 @@ django-admin --version
 ---
 ## 서버 실행
 ```bash
+# 마이그레이션 생성 및 적용
+python manage.py makemigrations
+python manage.py migrate
+
 # Django 개발 서버 실행 (로컬 테스트용)
 python manage.py runserver
 

@@ -23,6 +23,35 @@ category_labels = {
     '강의_잘함': '강의 잘함',
 }
 
+import torch
+import torch.nn as nn
+from sentence_transformers import SentenceTransformer
+
+print('Loading SentenceTransformer and NN...')
+sbert = SentenceTransformer('distiluse-base-multilingual-cased')
+
+class MyNN(nn.Module):
+    def __init__(self, input_size, num_classes):
+        super(MyNN, self).__init__()
+        self.fc1 = nn.Linear(input_size, 128)
+        self.fc2 = nn.Linear(128, 64)
+        self.fc3 = nn.Linear(64, num_classes)
+        self.relu = nn.ReLU()
+
+    def forward(self, x):
+        x = self.fc1(x)
+        x = self.relu(x)
+        x = self.fc2(x)
+        x = self.relu(x)
+        x = self.fc3(x)
+        return x
+
+net = MyNN(sbert.get_sentence_embedding_dimension(), 6)
+net.load_state_dict(torch.load('data/nn_model.pth'))
+net.eval()
+
+print('Done!')
+
 @login_required
 def recommend(request):
     """
@@ -59,6 +88,13 @@ def recommend(request):
         })
     # ──────────────────────────────────────────────────
 
+    # ────────────── “jaehoon” 전용 GET 처리 ──────────────
+    if request.method == 'GET' and model == 'jaehoon':
+        return render(request, 'recommend/jaehoon_result.html', {
+            'show_result': False
+        })
+    # ──────────────────────────────────────────────────
+
     # 3) 드래그 리스트에 사용할 카테고리 구성
     cats = default_weights.get(model, default_weights['yunseo'])
     categories = [
@@ -70,7 +106,33 @@ def recommend(request):
     recommendations = []
 
     # 4) POST 요청일 때만 추천 결과 계산
-    if request.method == 'POST':
+    if request.method == 'POST':        
+        # ────────────── “jaehoon” 전용 POST 처리 ──────────────
+        if model == 'jaehoon':
+            # 1) 사용자 입력 텍스트 받기
+            user_text = request.POST.get('user_text', '').strip()
+  
+            # 2) SBERT 임베딩
+            embedding = sbert.encode(user_text)
+            input_tensor = torch.tensor(embedding, dtype=torch.float32).unsqueeze(0)
+
+            # 3) NN 예측
+            with torch.no_grad():
+                outputs = net(input_tensor)
+                probabilities = torch.softmax(outputs, dim=1).numpy().flatten()
+
+            # 4) 교수 이름과 결과 매핑
+            professor_names = ['김선정', '김유섭', '김은주', '신미영', '양은샘', '이정근']  # 모델 학습 시 사용한 순서와 일치해야 함
+            recommendations = sorted(zip(professor_names, probabilities), key=lambda x: x[1], reverse=True)
+
+            return render(request, 'recommend/jaehoon_result.html', {
+                'model': model,
+                'categories': categories,
+                'show_result': True,
+                'recommendations': recommendations,
+            })
+        # ──────────────────────────────────────────────────
+
         # 4.1) 사용자가 정렬한 우선순위 파싱
         order = request.POST.get('aspect_order', '')
         if order:
@@ -82,9 +144,7 @@ def recommend(request):
         BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         csv_map = {
             'seohee':  'professor_scores_seohee.csv',
-            'yunseo':  'professor_scores.csv',
-            'nari':    'professor_scores.csv',
-            'jaehoon': 'professor_scores.csv',
+            'yunseo':  'professor_scores.csv'
         }
         csv_file = csv_map.get(model, 'professor_scores.csv')
         csv_path = os.path.join(BASE_DIR, 'data', csv_file)
