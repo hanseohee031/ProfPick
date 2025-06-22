@@ -57,7 +57,7 @@
 
 ---
 ## 발표 자료
-
+- [데이터마이닝 ProfPick 발표자료](image/presentation.pptx)
 
 
 ---
